@@ -18,5 +18,6 @@ $(OBJECTS): $(SOURCES) $(INCS)
 	$(ASM) $(FLAGS) $(SOURCES)  -o $@
 
 clean:
+
 	rm -rf obj/
 	rm $(EXECUTABLE)
