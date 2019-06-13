@@ -20,4 +20,3 @@ $(OBJECTS): $(SOURCES) $(INCS)
 clean:
 	rm -rf obj/
 	rm $(EXECUTABLE)
-

@@ -7,12 +7,6 @@ state:          resq 1
 
 section .text
 
-; 											Минимальный набор слов
-
-
-; 											Стековые комбинаторы
-
-
 native "drop", drop
     pop rax
     xor rax, rax
@@ -28,9 +22,6 @@ native "swap", swap
 native "dup", dup
     push qword [rsp]
     jmp next
-
-
-; 											Арифметические операции
 
 
 native "+", plus
@@ -92,8 +83,7 @@ native "<", ls
     push 1
     jmp next    
     
-    
-;	 										Логические операции       
+    ;Логические операции       
     
     
 native "not", not
@@ -136,8 +126,7 @@ native "lor", lor
     push rax
     jmp next
 
-
-; 											Работа со стеком возвратов
+;Работа со стеком возвратов
 
 
 native ">r", to_rstack
@@ -157,7 +146,7 @@ native "r@", nondestr_rstack
     jmp next
     
     
-; 											Работа с памятью
+;Работа с памятью
 
 
 native "@", read
@@ -189,12 +178,12 @@ native "execute", execute
     jmp [rax]
 
 
-; 											Управление выполнением
+;Управление выполнением
 
 
 native "docol", docol
         sub rstack, word_size		
-        mov [rstack], pc	; save ptr to next xt
+        mov [rstack], pc	
         add w, word_size	    	
         mov pc, w	    	
         jmp next
@@ -214,8 +203,7 @@ native "branch0", branch0
     jmp next
 
 
-; 											Служебные
-
+; Cлужебные команды
 
 native "lit", lit
     push qword [pc]
@@ -315,10 +303,10 @@ native "'", tick, 1
     mov rdi, rax
     call cfa
    
-    cmp qword[state], 1		; if interpret push xt
+    cmp qword[state], 1		
     jne .interpret
 
-    mov rdi, [here]			; else adding xt_lit & xt to word is defined by ':'
+    mov rdi, [here]			
     mov qword [rdi], xt_lit             	
     add qword [here], 8
 
@@ -334,18 +322,18 @@ native "'", tick, 1
     jmp next
 
 native ":", col
-    mov qword [state], 1     	; compil mode now
+    mov qword [state], 1     	
     
     mov rax, [here]
     mov rcx, [last_word]
 
     ; define header
-    mov [rax], rcx          	; link to previous word
+    mov [rax], rcx          	
 
-    mov [last_word], rax    	; update last word
+    mov [last_word], rax    	
     add rax, word_size
 
-    mov byte[rax], 0		; \0-name-\0
+    mov byte[rax], 0		
     inc rax
 
     push rax
@@ -353,14 +341,14 @@ native ":", col
     call read_word
     pop rax
     mov rsi, rax
-    call string_copy        	; define name
+    call string_copy        	
 
     mov rax, rsi
-    mov byte[rax], 0		; flag
+    mov byte[rax], 0		
     inc rax                 	
 
     ; define ex token
-    mov qword [rax], docol_impl   	; docol
+    mov qword [rax], docol_impl   	
     add rax, 8
     mov [here], rax
     jmp next
@@ -368,7 +356,8 @@ native ":", col
 native ";", semicol, 1
     mov qword [state], 0
     mov rax, [here]
-    mov qword [rax], xt_exit    ; add xt_exit to end
+    mov qword [rax], xt_exit   
     add rax, word_size
     mov [here], rax
     jmp next
+
